@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raft Consensus Protocol Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .canvas-container {
+            flex: 1;
+        }
+        
+        .controls {
+            width: 300px;
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+            height: fit-content;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        .control-group h3 {
+            margin: 0 0 10px 0;
+            color: #4CAF50;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-family: inherit;
+            font-size: 12px;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button.danger {
+            background: #f44336;
+        }
+        
+        button.danger:hover {
+            background: #da190b;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+        }
+        
+        .status {
+            background: #333;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        
+        .node-info {
+            background: #333;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        
+        .follower { background: #2196F3; }
+        .candidate { background: #FF9800; }
+        .leader { background: #FFD700; }
+        .dead { background: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="canvas-container">
+            <div id="p5-canvas"></div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Node States</h3>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color follower"></div>
+                        <span>Follower</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color candidate"></div>
+                        <span>Candidate</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color leader"></div>
+                        <span>Leader</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color dead"></div>
+                        <span>Dead</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Simulation</h3>
+                <button onclick="toggleSimulation()">Play/Pause</button>
+                <button onclick="resetSimulation()">Reset</button>
+                <button onclick="stepSimulation()">Step</button>
+            </div>
+            
+            <div class="control-group">
+                <h3>Speed Control</h3>
+                <div class="slider-container">
+                    <span>1x</span>
+                    <input type="range" id="speedSlider" min="1" max="10" value="1" oninput="updateSpeed(this.value)">
+                    <span>10x</span>
+                </div>
+                <div>Speed: <span id="speedValue">1x</span></div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Cluster Control</h3>
+                <button onclick="addNode()">Add Node</button>
+                <button onclick="removeNode()">Remove Node</button>
+                <button class="danger" onclick="killRandomNode()">Kill Random</button>
+                <button onclick="reviveAll()">Revive All</button>
+            </div>
+            
+            <div class="control-group">
+                <h3>Network</h3>
+                <button class="danger" onclick="createPartition()">Create Partition</button>
+                <button onclick="healPartition()">Heal Network</button>
+                <button onclick="addLatency()">Add Latency</button>
+            </div>
+            
+            <div class="control-group">
+                <h3>Client Requests</h3>
+                <button onclick="sendRequest()">Send Request</button>
+                <button onclick="sendBurst()">Send Burst</button>
+            </div>
+            
+            <div class="control-group">
+                <h3>Status</h3>
+                <div class="status" id="status">
+                    Term: 0<br>
+                    Leader: None<br>
+                    Nodes: 5<br>
+                    Messages: 0
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h3>Node Info</h3>
+                <div class="node-info" id="nodeInfo">
+                    Click on a node to see details
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/raftNode.js"></script>
+    <script src="js/raftNetwork.js"></script>
+    <script src="js/logEntry.js"></script>
+    <script src="js/message.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
