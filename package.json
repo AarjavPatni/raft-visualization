@@ -1,0 +1,34 @@
+{
+  "name": "raft-visualization",
+  "version": "1.0.0",
+  "description": "Interactive visualization of the Raft consensus protocol built with p5.js",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "raft",
+    "consensus",
+    "distributed-systems",
+    "visualization",
+    "p5js",
+    "interactive",
+    "education"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/raft-visualization.git"
+  },
+  "homepage": "https://your-username.github.io/raft-visualization",
+  "bugs": {
+    "url": "https://github.com/your-username/raft-visualization/issues"
+  },
+  "devDependencies": {
+    "serve": "^14.0.0"
+  }
+}
