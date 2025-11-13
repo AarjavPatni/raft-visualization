@@ -23,7 +23,7 @@ This visualization demonstrates the **Raft consensus protocol**, a distributed c
 ## Quick Start
 
 ### Option 1: Live Demo
-Visit the hosted version: [**Live Demo**](https://raft-visualization-aarjavpatni.vercel.app)
+Visit the hosted version: [**Live Demo**](https://aarjavpatni.github.io/raft-visualization/)
 
 ### Option 2: Local Development
 ```bash
@@ -174,46 +174,6 @@ this.showDebugInfo = false;     // Debug information
 this.latency = 0;              // Base network latency
 this.dropRate = 0;             // Message drop probability
 this.speedMultiplier = 1;      // Animation speed
-```
-
-## Deployment
-
-### GitHub Pages
-1. Push code to GitHub repository
-2. Go to Settings → Pages
-3. Select source branch (usually `main`)
-4. Visit `https://yourusername.github.io/raft-visualization`
-
-### Vercel
-1. Connect GitHub repository to Vercel
-2. No build configuration needed (static files)
-3. Automatic deployment on push
-
-### Netlify
-1. Drag and drop project folder to Netlify
-2. Or connect GitHub repository
-3. Instant deployment
-
-## Contributing
-
-Contributions welcome! Areas for improvement:
-
-- **Educational Features** - Step-by-step guided tours
-- **Advanced Scenarios** - More complex failure modes
-- **Performance Metrics** - Detailed analytics dashboard
-- **Mobile Support** - Touch-friendly interactions
-- **Export Features** - Save scenarios and configurations
-
-### Development Setup
-```bash
-# Fork and clone the repository
-git clone https://github.com/AarjavPatni/raft-visualization.git
-cd raft-visualization
-
-# Make changes and test locally
-python -m http.server 8000
-
-# Submit pull request
 ```
 
 ## Resources
